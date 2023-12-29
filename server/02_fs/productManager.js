@@ -3,14 +3,22 @@ import fs from "fs";
 // const crypto = require("crypto");
 import crypto from "crypto";
 
+import { fileURLToPath } from 'url';
+import path from "path";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class ProductManager {
+
+
   constructor() {
-    this.ruta = "./data/productManager.json"; 
+    this.ruta = path.join(__dirname, "data", "productManager.json");
     this.productos = [];
     console.log(this.productos);
   }
+
+ 
 
   async saveProducts() {
     const jsonData = JSON.stringify(this.productos, null, 2);
@@ -25,6 +33,7 @@ class ProductManager {
     this.productos.push(producto);
     this.saveProducts();
     console.log("Producto creado con éxito");
+    console.log(this.productos);
   }
 
   async read() {
@@ -32,10 +41,16 @@ class ProductManager {
       const resultado = await fs.promises.readFile(this.ruta, "utf-8");
       this.productos = JSON.parse(resultado);
       console.log(this.productos);
+      return this.productos
     } catch (error) {
       console.log("Error al leer el archivo");
     }
   }
+
+
+
+
+
   readOne(id) {
     try {
       const resultado = fs.readFileSync(this.ruta, "utf-8");
@@ -44,12 +59,24 @@ class ProductManager {
 
       if (!producto) {
         throw new Error("Don't exist product with ID " + id);
-      } else console.log(producto);
+      } else console.log(producto)
+      return producto;
+
+
+
     } catch (error) {
       console.log(error.message);
       return error.message;
     }
   }
+
+
+
+
+
+
+
+
   async destroy(id) {
     try {
       const resultado = fs.readFileSync(this.ruta, "utf-8");
@@ -74,8 +101,7 @@ class ProductManager {
 
 // Uso de la clase ProductManager
 
-const productManager = new ProductManager( "./data/productManager.json");
-export default productManager;
+
 const productos = [
   {
     title: "Bicicleta",
@@ -97,6 +123,8 @@ const productos = [
   },
 ];
 
+const productManager = new ProductManager("./server/02_fs/data/productManager.json");
+export default productManager;
 
 // productManager.create(productos[0]);
 // productManager.create(productos[1]);
