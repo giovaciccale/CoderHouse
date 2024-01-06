@@ -1,9 +1,18 @@
-const fs = require("fs");
-const crypto = require("crypto");
+// const fs = require("fs");
+import fs from "fs";
+// const crypto = require("crypto");
+import crypto from "crypto";
+
+
+import { fileURLToPath } from 'url';
+import path from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class UserManager {
   constructor() {
-    this.ruta = "./data/userManager.json";
+    this.ruta = path.join(__dirname, "data", "userManager.json");
     this.usuarios = [];
   }
 
@@ -26,6 +35,7 @@ class UserManager {
       const resultado = await fs.promises.readFile(this.ruta, "utf-8");
       this.usuarios = JSON.parse(resultado);
       console.log(this.usuarios);
+      return this.usuarios
     } catch (error) {
       console.log("Error al leer el archivo");
     }
@@ -33,11 +43,17 @@ class UserManager {
 
   readOne(id) {
     try {
-      const usuario = this.usuarios.find((p) => p.id === id);
-      if (!usuario) {
-        throw new Error("Don't exist product with ID" + id);
-      }else console.log(usuario);
+     
       
+      const resultado = fs.readFileSync(this.ruta, "utf-8");
+      this.usuarios = JSON.parse(resultado);
+      const usuario = this.usuarios.find((each) => each.id === String(id));
+
+
+      if (!usuario) {
+        throw new Error("Don't exist user with ID " + id);
+      }else console.log(usuario);
+      return usuario;
     } catch (error) {
       console.log(error.message);
       return error.message;
@@ -69,7 +85,7 @@ class UserManager {
 }
 
 // Uso de la clase ProductManager
-const userManager = new UserManager();
+
 const usuarios = [
   {
     name: "Arturo",
@@ -87,6 +103,10 @@ const usuarios = [
     email: "prueba3@hotmail.com",
   },
 ];
+
+
+const userManager = new UserManager("./server/02_fs/data/productManager.json");
+export default userManager;
 
 
 // userManager.create(usuarios[0]);
