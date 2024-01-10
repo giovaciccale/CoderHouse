@@ -48,6 +48,27 @@ class UserManager {
           return error.message;
         }
       }
+      update(id,newData){
+        try {
+          const userIndex = UserManager.#users.findIndex((each) => each.id === (id));
+          if (userIndex === -1) {
+            throw new Error("No existe un producto con el ID " + id);
+          }
+          UserManager.#users[userIndex] = {
+            ...UserManager.#users[userIndex],
+            ...newData
+          };
+          console.log("Usuario actualizado con éxito");
+       
+        
+          return UserManager.#users[userIndex];
+        
+        } catch (error) {
+          return error.message;
+        }
+      }
+
+
 }
 
 const Users = new UserManager({
@@ -68,5 +89,15 @@ Users.create({
 
 console.log(Users.read());
 // console.log(Users.readOne(1));
-console.log(Users.destroy(2));
+// console.log(Users.destroy(2));
+// console.log(Users.read());
+
+Users.update(2,{
+
+  name: "Jose actualizado",
+  photo: "URL",
+  email: "prueba1@hotmail.com"
+
+});
+
 console.log(Users.read());

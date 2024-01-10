@@ -50,6 +50,33 @@ class ProductManager {
       return error.message;
     }
   }
+
+update(id,newData){
+try {
+  const productoIndex = ProductManager.#products.findIndex((each) => each.id === (id));
+  if (productoIndex === -1) {
+    throw new Error("No existe un producto con el ID " + id);
+  }
+  ProductManager.#products[productoIndex] = {
+    ...ProductManager.#products[productoIndex],
+    ...newData
+  };
+  console.log("Producto actualizado con éxito");
+
+
+  return ProductManager.#products[productoIndex];
+
+} catch (error) {
+  return error.message;
+}
+
+
+}
+
+
+
+
+
 }
 
 const Products = new ProductManager({
@@ -66,9 +93,20 @@ Products.create({
   stock: 20,
 });
 
+
+
 console.log(Products.read());
 // console.log(Products.readOne(1));
 // console.log(Products.destroy(2));
 // console.log(Products.read());
-console.log(Products.destroy(2));
+// console.log(Products.create(2));
+// console.log(Products.read());
+
+Products.update(2, {  
+  title: "Bicicleta Nueva",
+  photo: "URL Nuevo",
+  price: 20000,
+  stock: 30,
+});
+
 console.log(Products.read());
